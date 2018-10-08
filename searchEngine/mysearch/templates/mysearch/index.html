@@ -1,0 +1,55 @@
+<!DOCTYPE >
+<html>
+    <head>
+        <title>Search Project</title>
+        <link href="/static/styles.css" rel="stylesheet">
+        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
+
+        <style>
+            body {
+                padding: 10px;
+            }
+            input[type="text"] {
+                height: 30px;
+            }
+
+            .highlight {
+                background-color: yellow;
+                font-weight: bold;
+            }
+            
+            .header {
+                margin: 0 auto;
+                width: 700px;
+                text-align: center;
+            }
+            
+            #search-box {
+                width: 500px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <h1>Search Here</h1>
+            <form class="form-search">
+                <input id="search-box" type="text" name="Product" value="{{ Product.product_name }}" class="search-Product" placeholder="Search Product..."/>
+                <input type="submit" value="Search" class="btn btn-success inline"/>
+            </form>
+        </div>
+       
+        
+        <ul>  
+ {% for product in mylist %}
+
+     <li>{{ product.product_name }}</li>>   
+     {% endfor %}
+</ul>
+
+
+           
+    </body>
+    
+        
+
+</html>
