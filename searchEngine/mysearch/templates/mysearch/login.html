@@ -3,7 +3,7 @@
 {% if error %}
 {{ error }}
 {% endif %}
-<form method="post" action="{% url 'index' %}">{% csrf_token %}
+<form method="post" action="{% url 'login' %}">{% csrf_token %}
 <input type=text placeholder="username" name="username">
 <input type=password placeholder="password" name="password">
 <input type="submit" value="login">

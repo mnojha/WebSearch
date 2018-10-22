@@ -6,9 +6,12 @@
 </head>
 
 <body>
-    <form method="POST">
-        {% csrf_token %} {{ form.as_p }}
-        <button type="submit">Submit</button>
+    <form method="POST" action="{% url 'signup' %}">{% csrf_token %} 
+    <input type="text" name="username" placeholder="username">
+    <input type="text" name="email" placeholder="email">
+    <input type="text" name="password1" placeholder="password">
+    <input type="text" name="password2" placeholder="password again">
+        <input type="submit" value="signup">
     </form>
 </body>
 

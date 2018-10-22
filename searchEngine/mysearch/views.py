@@ -2,9 +2,9 @@ from django.shortcuts import render, HttpResponse
 from django.http import HttpResponse
 from django.template import loader
 from .models import Product
-from .models import Signup
 from .forms import SearchForm
 from .forms import SignupForm
+from .forms import LoginForm
 from django.db.models import Q
 
 from django.contrib.auth import authenticate, login
@@ -14,9 +14,6 @@ from django import forms
 
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
-
-from django.contrib.auth.forms import UserCreationForm
-from django.urls import reverse_lazy
 from django.views import generic
 from django.contrib.auth.models import User
 
@@ -34,38 +31,27 @@ def search(request):
 	my_product = Product.objects.filter(product_name=product_name)
 	return render(request, 'mysearch/search.html', context={'my_product' : my_product,})
 	
-#def signup(request):
-#	if request.method == 'POST':
-#		form = UserCreationForm(request.POST)
-#		if form.is_valid:
-#			form.save()
-#			username = form.cleaned_data.get('username')
-#			password = form.cleaned_data.get('password')
-#			user = authenticate(username=username, password=password)
-#			login(request,user)
-#			return render('home')
-#		else:
-#			form = UserCreationForm()
-#		return render(request, 'mysearch/signup.html', {'form': form})
-
 def signup(request):
 	if request.method == 'POST':
-		form = SignupForm(request.POST)
-		if form.is_valid():
-			userObj = form.cleaned_data
-			username = userObj['username']
-			password = userObj['password']
-			if not(User.objects.filter(username=username).exists()):
-				User.objects.create_user(username, password)
-				user = authenticate(username=username, password=password)
-				login(request, user)
-				return HttpResponseRedirect('/')
-			else:
-				raise forms.ValidationError('Looks like a username with that password already exists')
-
+		username = request.POST.get('username')
+		print(username)
+		email = request.POST.get('email')
+		print(email)
+		password1 = request.POST.get('password1')
+		print(password1)
+		password2 = request.POST.get('password2')
+		if password1 == password2:
+			user = User.objects.create_user(username=username, email=email, password=password1,)
+			user.save()
+			print(signup)
+			return HttpResponseRedirect("/")
 		else:
-			form = UserCreationForm()
-			return render(request, 'mysearch/signup.html', {'form': form})
+			error = " Password Mismatch "
+			return render(request, 'mysearch/signup.html',{"error":error})
+	else:
+		return render(request, 'mysearch/signup.html')
+	
+
 # * the reason for using "reverse_lazy" instead of "reverse" is that for all generic
 #  class_based views the urls are not loaded when the file is imported, so we have 
 #  to use the lazy form of reverse to load them later when they're available. *
@@ -73,3 +59,20 @@ def signup(request):
 
 #	success_url = reverse_lazy('mysearch/index.html')
 #	template_name = 'mysearch/signup.html'
+
+def user_login(request):
+	form = LoginForm()
+	if request.method == 'POST':
+		username = request.POST.get('username')
+		password = request.POST.get('password')
+		user = authenticate(username=username, password=password)
+		if user:
+			login(request,user)
+			return HttpResponseRedirect("/signup")
+		else:
+			error = "Sorry! username and password didn't match, Please try again!"
+			return render(request, 'mysearch/login.html')
+
+	else:
+		return render(request, 'mysearch/login.html')
+
